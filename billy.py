@@ -206,6 +206,13 @@ class Playground():
     def find_billy(self):
         return self.__find_billy(self.n, self.START)
 
+    def test(self, expected):
+        actual = self.find_billy()
+        if actual == expected:
+            return 1
+        else:
+            return 0
+
     def __find_billy(self, n, coordinates):
         # base case n < 4
         if n <= 2:
@@ -215,7 +222,7 @@ class Playground():
             for x in range(coordinates[0][0], coordinates[1][0] + 1):
                 for y in range(coordinates[0][1], coordinates[1][1] + 1):
                     if self.fetch(x, y) == "BILLY":
-                        return f"Billy is at ({x}, {y})"
+                        return (x, y)
             return False
 
         # Inductive Step
