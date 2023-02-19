@@ -206,9 +206,6 @@ class Playground():
     def find_billy(self):
         return self.__find_billy(self.n, self.START)
 
-    def xf(self, n, coordinates):
-        return self.__find_billy(n, coordinates)
-
     def __find_billy(self, n, coordinates):
         # base case n < 4
         if n <= 2:
