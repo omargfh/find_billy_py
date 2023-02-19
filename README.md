@@ -23,3 +23,17 @@ $ python find_billy.py billy.txt
 1 | 2 | 3 | 4 | 5 | 6
 Billy is at (6, 5)
 ```
+
+### Example Input
+```txt
+* * * * * *
+> v * * > B
+^ > > > ^ *
+^ < < < < *
+> > > > ^ *
+^ * * * * *
+```
+
+### Example Images
+![Example 1](/4x4.png)
+![Example 2](/2x2.png)
