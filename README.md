@@ -35,7 +35,7 @@ Billy is at (6, 5)
 ```
 
 ### Example Images
- - ![12x12]('/images/12x12.png')
+ - ![12x12](/images/12x12.png)
  - ![10x10](/images/10x10.png)
 
 ### Runtime
