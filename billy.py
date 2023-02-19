@@ -7,7 +7,6 @@ class Playground():
         self.n = n
         self.grid = [["NO MOVE"] * n for _ in range(n)]
         self.START = [(1, 1), (n, n)]
-        self.debug = False
 
     def __repr__(self):
         board = []
@@ -94,10 +93,6 @@ class Playground():
         # Save image
         img.save(file)
 
-
-    def set_debug(self, debug):
-        self.debug = debug
-
     def subdivide(self, n, coordinates, shrinkage = 2):
         n_prime = math.ceil(n * (1/shrinkage))
         divisions = []
@@ -124,15 +119,11 @@ class Playground():
         coordinates = list(coordinates)
         if coordinates[0] == (1,1):
             boundary_cells.append((0, 1))
-        if self.debug:
-            print(f"Coordinates: {coordinates}")
         boundary_box_coordinates = (
             (coordinates[0][0] - 1, coordinates[0][1] - 1),
             (coordinates[1][0] + 1, coordinates[1][1] + 1)
         )
         boundary_box_size = n + 2
-        if self.debug:
-            print(f"Boundary box size: {boundary_box_size} => {boundary_box_coordinates}")
         for x in range(boundary_box_coordinates[0][0], boundary_box_coordinates[1][0] + 1):
             if (x <= 0 or x > self.n):
                 continue
@@ -177,30 +168,26 @@ class Playground():
     def count_visits(self, quad_coords, boundary_cells):
         visits = self.Visits()
         checked = set()
+
         # count entries
         for x, y in boundary_cells:
             visits.ins += self.has_entered(x, y, quad_coords)
+
         # count exits
         for x in range(quad_coords[0][0], quad_coords[1][0] + 1):
             for y in [quad_coords[0][1], quad_coords[1][1]]:
                 if (x, y) not in checked:
                     k = visits.outs
                     checked.add((x, y))
-                    if self.debug:
-                        print(f"Checking ({x}, {y}), move is {self.fetch(x, y)}")
                     visits.outs += self.has_left(x, y, quad_coords)
-                    if self.debug and k != visits.outs:
-                        print(f"({x}, {y}) has left")
+
         for y in range(quad_coords[0][1], quad_coords[1][1] + 1):
             for x in [quad_coords[0][0], quad_coords[1][0]]:
                 if (x, y) not in checked:
                     checked.add((x, y))
                     k = visits.outs
-                    if self.debug:
-                        print(f"Checking ({x}, {y}), move is {self.fetch(x, y)}")
                     visits.outs += self.has_left(x, y, quad_coords)
-                    if self.debug and k != visits.outs:
-                        print(f"({x}, {y}) has left")
+
         return visits
 
     def find_billy(self):
@@ -210,14 +197,11 @@ class Playground():
         actual = self.find_billy()
         if actual == expected:
             return 1
-        else:
-            return 0
+        return 0
 
     def __find_billy(self, n, coordinates):
         # base case n < 4
         if n <= 2:
-            if self.debug:
-                print(f"Checking {coordinates} for Billy at n={n}")
             # return coordinate of billy
             for x in range(coordinates[0][0], coordinates[1][0] + 1):
                 for y in range(coordinates[0][1], coordinates[1][1] + 1):
@@ -228,23 +212,12 @@ class Playground():
         # Inductive Step
         quads, n_prime = self.subdivide(n, coordinates)
         for quad in quads:
-            if self.debug:
-                print(f"Checking {quad} for Billy at n={n} (n'={n_prime})")
             boundary_cells = self.get_bounding_box(n_prime, quad)
             v = self.count_visits(quad, boundary_cells)
-            if self.debug:
-                print(f"Boundary cells: {boundary_cells}")
-                print(f"Visits: {v}")
             if v.ins - v.outs < 0:
                 raise Exception("Invalid state: more exits than entries")
             if v.is_here():
-                if self.debug:
-                    print(f"Found Billy at {quad} at n={n} (n'={n_prime})")
-                    print("-----------------------------------------------------")
                 return self.__find_billy(n_prime, quad)
-            if self.debug:
-                print(f"Did not find Billy at {quad} at n={n} (n'={n_prime})")
-                print("-----------------------------------------------------")
         return False
 
 def main():
